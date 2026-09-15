@@ -2,6 +2,7 @@ from django.db import models
 
 from core import settings
 
+
 class Professional(models.Model):
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL,
@@ -10,9 +11,9 @@ class Professional(models.Model):
     )
     social_name = models.CharField(max_length=150)
     profession = models.CharField(max_length=100)
-    adress = models.TextField()
+    address = models.TextField()
     contact = models.CharField(max_length=100)
-    created_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
 class Meta:
