@@ -1,6 +1,6 @@
 import re
 
-from psycopg import transaction
+from django.db import transaction
 from rest_framework import serializers
 
 from users.models import User
@@ -20,12 +20,22 @@ class ProfessionalValidationMixin:
 
         return value
 
-    def validate_professional(self, value):
+    def validate_profession(self, value):
         value = value.strip()
 
         if len(value) < 2:
             raise serializers.ValidationError(
                 "A profissão deve ter pelo menos 2 caracteres."
+            )
+
+        return value
+
+    def validate_address(self, value):
+        value = value.strip()
+
+        if len(value) < 5:
+            raise serializers.ValidationError(
+                "O endereço deve ter pelo menos 5 caracteres."
             )
 
         return value
@@ -57,11 +67,10 @@ class ProfessionalSerializer(
         source="user.username",
         read_only=True,
     )
-
     email = serializers.EmailField(
-            source="user.email",
-            read_only=True,
-        )
+        source="user.email",
+        read_only=True,
+    )
 
     class Meta:
         model = Professional
@@ -84,6 +93,7 @@ class ProfessionalSerializer(
             "updated_at",
         ]
 
+
 class ProfessionalRegistrationSerializer(
     ProfessionalValidationMixin,
     serializers.ModelSerializer,
@@ -102,13 +112,13 @@ class ProfessionalRegistrationSerializer(
         ]
         read_only_fields = ["id"]
 
-        @transaction.atomic
-        def create(self, validated_data):
-            user_data = validated_data.pop("user")
+    @transaction.atomic
+    def create(self, validated_data):
+        user_data = validated_data.pop("user")
 
-            user = User.objects.create_user(**user_data)
+        user = User.objects.create_user(**user_data)
 
-            return Professional.objects.create(
-                user=user,
-                **validated_data,
-            )
+        return Professional.objects.create(
+            user=user,
+            **validated_data,
+        )
