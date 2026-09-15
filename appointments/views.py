@@ -20,10 +20,15 @@ class AppointmentViewSet(viewsets.ModelViewSet):
 
         user = self.request.user
 
-        if user.is_staff:
-            return queryset
+        if not user.is_staff:
+            queryset = queryset.filter(professional__user=user)
 
-        return queryset.filter(professional__user=user)
+        professional_id = self.request.query_params.get("professional")
+
+        if professional_id:
+            queryset = queryset.filter(professional_id=professional_id)
+            
+        return queryset
 
     def perform_create(self, serializer):
         user = self.request.user
