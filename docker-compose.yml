@@ -28,6 +28,7 @@ services:
     command: python manage.py runserver 0.0.0.0:8000
     volumes:
       - .:/app
+      - /app/.venv
     ports:
       - "8000:8000"
     environment:
@@ -35,7 +36,7 @@ services:
       POSTGRES_PORT: 5432
       POSTGRES_DB: ${POSTGRES_DB:-lacrei_db}
       POSTGRES_USER: ${POSTGRES_USER:-lacrei_user}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-lacrei_pass}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-lacrei_password}
       DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY}
       DJANGO_DEBUG: ${DJANGO_DEBUG:-True}
       DJANGO_ALLOWED_HOSTS: ${DJANGO_ALLOWED_HOSTS:-localhost,127.0.0.1}
