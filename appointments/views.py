@@ -27,7 +27,7 @@ class AppointmentViewSet(viewsets.ModelViewSet):
 
         if professional_id:
             queryset = queryset.filter(professional_id=professional_id)
-            
+
         return queryset
 
     def perform_create(self, serializer):

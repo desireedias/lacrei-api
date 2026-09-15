@@ -1,5 +1,6 @@
 from rest_framework import permissions, status, viewsets
 from rest_framework.response import Response
+
 from core.permissions import IsOwnerOrReadOnly
 
 from .models import Professional
@@ -20,7 +21,6 @@ class ProfessionalViewSet(viewsets.ModelViewSet):
             permissions.IsAuthenticatedOrReadOnly(),
             IsOwnerOrReadOnly(),
         ]
-
 
     def get_serializer_class(self):
         if self.action == "create":
