@@ -16,6 +16,14 @@ class Appointment(models.Model):
 
     class Meta:
         ordering = ["scheduled_at", "id"]
+
+        constraints = [
+            models.UniqueConstraint(
+                fields=["professional", "scheduled_at"],
+                name="unique_professional_appointment_time",
+            ),
+        ]
+
         indexes = [
             models.Index(
                 fields=["professional", "scheduled_at"],
