@@ -11,6 +11,7 @@ urlpatterns = [
     path("api/v1/auth/token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
     path("api/v1/auth/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
     path("api/v1/auth/token/blacklist/", TokenBlacklistView.as_view(), name="token_blacklist"),
-    path("api/v1/professionals/", include("professionals.urls"),),
+    path("api/v1/professionals/", include("professionals.urls")),
+    path("api/v1/appointments/", include("appointments.urls")),
 
 ]
