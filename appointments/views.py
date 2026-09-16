@@ -1,5 +1,7 @@
 from rest_framework import permissions, serializers, viewsets
 
+from professionals.models import Professional
+
 from .models import Appointment
 from .permissions import IsAppointmentOwner
 from .serializers import AppointmentSerializer
@@ -31,9 +33,9 @@ class AppointmentViewSet(viewsets.ModelViewSet):
         return queryset
 
     def perform_create(self, serializer):
-        user = self.request.user
+        professional = Professional.objects.filter(user=self.request.user).first()
 
-        if not hasattr(user, "professional_profile"):
+        if professional is None:
             raise serializers.ValidationError(
                 {
                     "detail": (
@@ -43,6 +45,4 @@ class AppointmentViewSet(viewsets.ModelViewSet):
                 }
             )
 
-        serializer.save(
-            professional=user.professional_profile,
-        )
+        serializer.save(professional=professional)

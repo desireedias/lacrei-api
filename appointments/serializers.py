@@ -1,6 +1,8 @@
 from django.utils import timezone
 from rest_framework import serializers
 
+from professionals.models import Professional
+
 from .models import Appointment
 
 
@@ -48,7 +50,19 @@ class AppointmentSerializer(serializers.ModelSerializer):
         if self.instance and scheduled_at is None:
             scheduled_at = self.instance.scheduled_at
 
-        professional = request.user.professional_profile
+        # Ajustado o espaçamento do kwargs
+        professional = Professional.objects.filter(user=request.user).first()
+
+        if professional is None:
+            # Identação do dicionário corrigida aqui
+            raise serializers.ValidationError(
+                {
+                    "detail": (
+                        "Apenas usuários com perfil profissional "
+                        "podem criar agendamentos."
+                    )
+                }
+            )
 
         conflicting_appointments = Appointment.objects.filter(
             professional=professional,
