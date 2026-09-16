@@ -124,7 +124,7 @@ jobs:
         env:
           EB_BUCKET: ${{ steps.eb-bucket.outputs.bucket }}
         run: |
-          VERSION_LABEL="staging-${GITHUB_SHA::7}-${GITHUB_RUN_NUMBER}"
+          VERSION_LABEL="staging-${GITHUB_SHA::7}-${GITHUB_RUN_NUMBER}-${GITHUB_RUN_ATTEMPT}"
           S3_KEY="lacrei-api/${VERSION_LABEL}.zip"
 
           aws s3 cp deploy.zip "s3://${EB_BUCKET}/${S3_KEY}"
