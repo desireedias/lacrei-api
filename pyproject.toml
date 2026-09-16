@@ -30,3 +30,5 @@ dev = [
 exclude = [
     "*/migrations/*",
 ]
+[tool.ruff.lint]
+ignore = ["RUF012"]
