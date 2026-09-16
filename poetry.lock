@@ -328,7 +328,22 @@ files = [
 ]
 markers = {main = "sys_platform == \"win32\"", dev = "platform_system == \"Windows\""}
 
+[[package]]
+name = "whitenoise"
+version = "6.12.0"
+description = "Radically simplified static file serving for WSGI applications"
+optional = false
+python-versions = ">=3.10"
+groups = ["main"]
+files = [
+    {file = "whitenoise-6.12.0-py3-none-any.whl", hash = "sha256:fc5e8c572e33ebf24795b47b6a7da8da3c00cff2349f5b04c02f28d0cc5a3cc2"},
+    {file = "whitenoise-6.12.0.tar.gz", hash = "sha256:f723ebb76a112e98816ff80fcea0a6c9b8ecde835f8ddda25df7a30a3c2db6ad"},
+]
+
+[package.extras]
+brotli = ["brotli"]
+
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.13"
-content-hash = "7795f5b3514956b2024197f8a20b8dc2a6efe2f8d9361c5bd5d9eb85571512e4"
+content-hash = "c1d5159cd0f0877e8234d213f81f752d8a5d9b4fcdbf8d1efda6680aa5c18165"
