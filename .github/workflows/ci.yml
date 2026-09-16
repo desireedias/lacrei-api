@@ -1,0 +1,79 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+      - develop
+  pull_request:
+    branches:
+      - master
+      - develop
+
+jobs:
+  lint-test-build:
+    name: Lint, Test and Build
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:15-alpine
+        env:
+          POSTGRES_DB: lacrei_test
+          POSTGRES_USER: lacrei_user
+          POSTGRES_PASSWORD: lacrei_password
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U lacrei_user -d lacrei_test"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      POSTGRES_HOST: localhost
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: lacrei_test
+      POSTGRES_USER: lacrei_user
+      POSTGRES_PASSWORD: lacrei_password
+
+      DJANGO_SECRET_KEY: github-actions-test-secret-key
+      DJANGO_DEBUG: "False"
+      DJANGO_ALLOWED_HOSTS: localhost,127.0.0.1
+      CORS_ALLOWED_ORIGINS: http://localhost:3000
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install Poetry
+        run: pipx install poetry
+
+      - name: Configure Poetry
+        run: poetry config virtualenvs.create true
+
+      - name: Install dependencies
+        run: poetry install --no-interaction --no-root
+
+      - name: Check Django configuration
+        run: poetry run python manage.py check
+
+      - name: Check migrations
+        run: poetry run python manage.py makemigrations --check --dry-run
+
+      - name: Run Ruff lint
+        run: poetry run ruff check .
+
+      - name: Check Ruff formatting
+        run: poetry run ruff format --check .
+
+      - name: Run tests
+        run: poetry run python manage.py test
+
+      - name: Build Docker image
+        run: docker build -t lacrei-api:${{ github.sha }} .
